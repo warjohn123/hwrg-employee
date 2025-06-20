@@ -26,6 +26,7 @@ export default function EmployeeDetailsScreen() {
       const res = await fetchUserDetails(user?.id);
       setEmployee(res);
     } catch (e) {
+      console.error(e);
     } finally {
       setLoading(false);
     }
