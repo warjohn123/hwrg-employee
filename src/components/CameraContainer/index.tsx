@@ -2,10 +2,12 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import { Image } from "expo-image";
 import { useRef, useState } from "react";
-import { Button, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Button, Pressable, StyleSheet, Text, View } from "react-native";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 import { uploadImage } from "../../lib/uploadImage";
 import { styles } from "./CameraContainer.styles";
+import { createTimelog } from "../../services/timelogs.service";
+import LoadingSpinner from "../LoadingSpinner";
 
 type Props = {
   setIsCameraOpen: (val: boolean) => void;
@@ -15,6 +17,7 @@ export default function CameraContainer({ setIsCameraOpen }: Props) {
   const [permission, requestPermission] = useCameraPermissions();
   const ref = useRef<CameraView>(null);
   const [uri, setUri] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [facing, setFacing] = useState<CameraType>("back");
   const user = useCurrentUser();
 
@@ -45,11 +48,23 @@ export default function CameraContainer({ setIsCameraOpen }: Props) {
   const submitPhoto = async () => {
     if (!uri) return;
 
-    await uploadImage(uri, user!.id);
+    setIsSubmitting(true);
+
+    try {
+      const imgPath = await uploadImage(uri, user!.id);
+
+      await createTimelog(imgPath, user!.id);
+      Alert.alert("Successfully clocked in");
+    } catch (e: any) {
+      Alert.alert("Something went wrong.", e);
+      setIsSubmitting(false);
+    }
     setIsCameraOpen(false);
   };
 
   const renderPicture = () => {
+    if (isSubmitting) return <LoadingSpinner />;
+
     return (
       <View>
         <Image
