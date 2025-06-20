@@ -1,14 +1,10 @@
-import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import {
-  CameraMode,
-  CameraType,
-  CameraView,
-  useCameraPermissions,
-} from "expo-camera";
+import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import { Image } from "expo-image";
 import { useRef, useState } from "react";
 import { Button, Pressable, StyleSheet, Text, View } from "react-native";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
+import { uploadImage } from "../../lib/uploadImage";
 import { styles } from "./CameraContainer.styles";
 
 type Props = {
@@ -19,8 +15,8 @@ export default function CameraContainer({ setIsCameraOpen }: Props) {
   const [permission, requestPermission] = useCameraPermissions();
   const ref = useRef<CameraView>(null);
   const [uri, setUri] = useState<string | null>(null);
-  const [mode, setMode] = useState<CameraMode>("picture");
   const [facing, setFacing] = useState<CameraType>("back");
+  const user = useCurrentUser();
 
   if (!permission) {
     return null;
@@ -42,16 +38,14 @@ export default function CameraContainer({ setIsCameraOpen }: Props) {
     setUri(photo!.uri);
   };
 
-  const toggleMode = () => {
-    setMode("picture");
-  };
-
   const toggleFacing = () => {
     setFacing((prev) => (prev === "back" ? "front" : "back"));
   };
 
-  const submitPhoto = () => {
-    console.log("photo submitted");
+  const submitPhoto = async () => {
+    if (!uri) return;
+
+    await uploadImage(uri, user!.id);
     setIsCameraOpen(false);
   };
 
@@ -79,7 +73,7 @@ export default function CameraContainer({ setIsCameraOpen }: Props) {
       <CameraView
         style={StyleSheet.absoluteFill} // fills the screen
         ref={ref}
-        mode={mode}
+        mode="picture"
         facing={facing}
         mute={false}
         responsiveOrientationWhenOrientationLocked
@@ -100,7 +94,7 @@ export default function CameraContainer({ setIsCameraOpen }: Props) {
                   style={[
                     styles.shutterBtnInner,
                     {
-                      backgroundColor: mode === "picture" ? "white" : "red",
+                      backgroundColor: "white",
                     },
                   ]}
                 />

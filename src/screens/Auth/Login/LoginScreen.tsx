@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { styles } from "./LoginScreen.styles";
+import { loginUser } from "../../../services/auth.service";
 
 type Props = {
   onLoginSuccess: () => void;
@@ -17,17 +18,26 @@ type Props = {
 export default function LoginScreen({ onLoginSuccess }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const onLogin = () => {
+  const onLogin = async () => {
     if (!email || !password) {
       Alert.alert("Missing Fields", "Please enter email and password");
       return;
     }
 
-    // Replace with real auth logic
-    Alert.alert("Login Successful", `Welcome, ${email}`);
+    setIsLoading(true);
 
-    onLoginSuccess();
+    try {
+      await loginUser(email, password);
+      // Replace with real auth logic
+      Alert.alert("Login Successful", `Welcome, ${email}`);
+
+      onLoginSuccess();
+    } catch (e) {
+      Alert.alert("Login failed", e as string);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -57,8 +67,10 @@ export default function LoginScreen({ onLoginSuccess }: Props) {
           onChangeText={setPassword}
         />
 
-        <Pressable style={styles.button} onPress={onLogin}>
-          <Text style={styles.buttonText}>Sign In</Text>
+        <Pressable style={styles.button} disabled={isLoading} onPress={onLogin}>
+          <Text style={styles.buttonText}>
+            {isLoading ? "Logging in" : "Sign In"}
+          </Text>
         </Pressable>
       </View>
     </KeyboardAvoidingView>
