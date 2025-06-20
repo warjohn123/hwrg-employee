@@ -1,4 +1,23 @@
+import { PAGE_SIZE } from "../constants/PAGE_SIZE";
 import { ITimelog } from "../types/ITimelog";
+
+export async function getTimeLogs(user_id, pageNumber = 1) {
+  try {
+    const res = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/api/timelogs?user_id=${user_id}&page=${pageNumber}&limit=${PAGE_SIZE}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    const data = await res.json();
+
+    return data;
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 export async function clockIn(photo_url, user_id) {
   try {
