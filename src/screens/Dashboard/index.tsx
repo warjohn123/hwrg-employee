@@ -1,8 +1,11 @@
+import { User } from "@supabase/supabase-js";
 import React, { useState } from "react";
-import { FlatList, Pressable, SafeAreaView, Text, View } from "react-native";
+import { FlatList, SafeAreaView, Text, View } from "react-native";
+import AttendanceButtons from "../../components/Attendance";
 import CameraContainer from "../../components/CameraContainer";
-import { styles } from "./Dashboard.styles";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
 import { IActivity } from "../../types/IActivity";
+import { styles } from "./Dashboard.styles";
 
 // const summaryCards = [
 //   { title: "Hours Worked", value: "42h", color: "#2563eb" },
@@ -14,6 +17,7 @@ export default function EmployeeDashboardScreen() {
   const [isCameraOpen, setIsCameraOpen] = useState<boolean>(false);
   //   const [hasClockedIn, setHasClockedIn] = useState(false);
   const [activities, setActivities] = useState<IActivity[]>([]);
+  const user = useCurrentUser() as User;
 
   //   const handleClockIn = () => {
   //     if (hasClockedIn) {
@@ -43,26 +47,9 @@ export default function EmployeeDashboardScreen() {
       ) : (
         <SafeAreaView style={styles.safe}>
           <View style={styles.container}>
-            <Text style={styles.header}>Welcome back, John 👋</Text>
+            <Text style={styles.header}>Welcome back, {user?.email} 👋</Text>
 
-            {/* <View style={styles.cardRow}>
-          {summaryCards.map((card, index) => (
-            <View
-              key={index}
-              style={[styles.card, { backgroundColor: card.color }]}
-            >
-              <Text style={styles.cardTitle}>{card.title}</Text>
-              <Text style={styles.cardValue}>{card.value}</Text>
-            </View>
-          ))}
-        </View> */}
-            {/* <ClockInButton /> */}
-            <Pressable
-              style={[styles.clockInButton, ,]}
-              onPress={() => setIsCameraOpen(true)}
-            >
-              <Text style={styles.clockInText}>Clock In</Text>
-            </Pressable>
+            <AttendanceButtons setIsCameraOpen={setIsCameraOpen} user={user} />
 
             <Text style={styles.sectionTitle}>Recent Activity</Text>
             <FlatList

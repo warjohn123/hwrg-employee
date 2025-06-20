@@ -6,7 +6,7 @@ import { Alert, Button, Pressable, StyleSheet, Text, View } from "react-native";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 import { uploadImage } from "../../lib/uploadImage";
 import { styles } from "./CameraContainer.styles";
-import { createTimelog } from "../../services/timelogs.service";
+import { clockIn } from "../../services/timelogs.service";
 import LoadingSpinner from "../LoadingSpinner";
 
 type Props = {
@@ -53,7 +53,7 @@ export default function CameraContainer({ setIsCameraOpen }: Props) {
     try {
       const imgPath = await uploadImage(uri, user!.id);
 
-      await createTimelog(imgPath, user!.id);
+      await clockIn(imgPath, user!.id);
       Alert.alert("Successfully clocked in");
     } catch (e: any) {
       Alert.alert("Something went wrong.", e);
@@ -75,9 +75,17 @@ export default function CameraContainer({ setIsCameraOpen }: Props) {
         <Button onPress={() => setUri(null)} title="Take another picture" />
 
         {uri && (
-          <Pressable style={styles.submitButton} onPress={submitPhoto}>
-            <Text style={styles.submitText}>Submit</Text>
-          </Pressable>
+          <>
+            <Pressable
+              style={styles.cancelButton}
+              onPress={() => setIsCameraOpen(false)}
+            >
+              <Text style={styles.submitText}>Cancel</Text>
+            </Pressable>
+            <Pressable style={styles.submitButton} onPress={submitPhoto}>
+              <Text style={styles.submitText}>Submit</Text>
+            </Pressable>
+          </>
         )}
       </View>
     );

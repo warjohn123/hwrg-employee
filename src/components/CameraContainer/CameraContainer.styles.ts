@@ -43,6 +43,13 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 24,
   },
+  cancelButton: {
+    marginTop: 32,
+    backgroundColor: "gray",
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
   submitText: {
     color: "#fff",
     fontSize: 16,
