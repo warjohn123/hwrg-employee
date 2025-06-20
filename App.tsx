@@ -19,8 +19,6 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const { session, loading } = useAuthSession();
 
-  console.log("session", session);
-
   useEffect(() => {
     if (session) setIsAuthenticated(true);
     else setIsAuthenticated(false);
