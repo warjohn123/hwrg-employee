@@ -19,14 +19,14 @@ export async function getTimeLogs(user_id, pageNumber = 1) {
   }
 }
 
-export async function clockIn(photo_url, user_id) {
+export async function clockIn(clock_in_photo, user_id) {
   try {
     const res = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/api/timelogs/clock-in`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id, photo_url }),
+        body: JSON.stringify({ user_id, clock_in_photo }),
       }
     );
 
@@ -36,14 +36,14 @@ export async function clockIn(photo_url, user_id) {
   }
 }
 
-export async function clockOut(user_id) {
+export async function clockOut(clock_out_photo, user_id) {
   try {
     const res = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/api/timelogs/clock-out`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id }),
+        body: JSON.stringify({ user_id, clock_out_photo }),
       }
     );
 

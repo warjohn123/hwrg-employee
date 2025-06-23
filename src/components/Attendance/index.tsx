@@ -1,17 +1,22 @@
-import { User } from "@supabase/supabase-js";
-import { useCallback, useEffect, useState } from "react";
-import LoadingSpinner from "../LoadingSpinner";
-import { clockOut, hasClockedInToday } from "../../services/timelogs.service";
-import { Alert, Pressable, Text } from "react-native";
-import { styles } from "./Attendance.styles";
 import { useFocusEffect } from "@react-navigation/native";
+import { User } from "@supabase/supabase-js";
+import { useCallback, useState } from "react";
+import { Alert, Pressable, Text } from "react-native";
+import { hasClockedInToday } from "../../services/timelogs.service";
+import LoadingSpinner from "../LoadingSpinner";
+import { styles } from "./Attendance.styles";
 
 type Props = {
   user: User;
   setIsCameraOpen: (val: boolean) => void;
+  setCurrentMode: (val: "clockIn" | "clockOut") => void;
 };
 
-export default function AttendanceButtons({ user, setIsCameraOpen }: Props) {
+export default function AttendanceButtons({
+  user,
+  setIsCameraOpen,
+  setCurrentMode,
+}: Props) {
   const [isCheckingAttendance, setIsCheckingAttendance] =
     useState<boolean>(true);
   const [hasClockedIn, setHasClockedIn] = useState<boolean>(false);
@@ -32,12 +37,6 @@ export default function AttendanceButtons({ user, setIsCameraOpen }: Props) {
     }, [])
   );
 
-  const out = async () => {
-    try {
-      await clockOut(user?.id);
-    } catch (e) {}
-  };
-
   if (isCheckingAttendance) return <LoadingSpinner />;
 
   return (
@@ -51,7 +50,13 @@ export default function AttendanceButtons({ user, setIsCameraOpen }: Props) {
               "This action cannot be undone.",
               [
                 { text: "Cancel", style: "cancel" },
-                { text: "Yes, clock out", onPress: () => out() },
+                {
+                  text: "Yes, clock out",
+                  onPress: () => {
+                    setCurrentMode("clockOut");
+                    setIsCameraOpen(true);
+                  },
+                },
               ],
               { cancelable: true }
             );
@@ -64,7 +69,10 @@ export default function AttendanceButtons({ user, setIsCameraOpen }: Props) {
       {!hasClockedIn && (
         <Pressable
           style={styles.clockInButton}
-          onPress={() => setIsCameraOpen(true)}
+          onPress={() => {
+            setCurrentMode("clockIn");
+            setIsCameraOpen(true);
+          }}
         >
           <Text style={styles.clockInText}>Clock In</Text>
         </Pressable>

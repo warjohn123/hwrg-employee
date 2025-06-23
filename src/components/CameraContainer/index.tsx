@@ -6,14 +6,18 @@ import { Alert, Button, Pressable, StyleSheet, Text, View } from "react-native";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 import { uploadImage } from "../../lib/uploadImage";
 import { styles } from "./CameraContainer.styles";
-import { clockIn } from "../../services/timelogs.service";
+import { clockIn, clockOut } from "../../services/timelogs.service";
 import LoadingSpinner from "../LoadingSpinner";
 
 type Props = {
   setIsCameraOpen: (val: boolean) => void;
+  currentMode: "clockIn" | "clockOut" | null;
 };
 
-export default function CameraContainer({ setIsCameraOpen }: Props) {
+export default function CameraContainer({
+  setIsCameraOpen,
+  currentMode,
+}: Props) {
   const [permission, requestPermission] = useCameraPermissions();
   const ref = useRef<CameraView>(null);
   const [uri, setUri] = useState<string | null>(null);
@@ -53,8 +57,13 @@ export default function CameraContainer({ setIsCameraOpen }: Props) {
     try {
       const imgPath = await uploadImage(uri, user!.id);
 
-      await clockIn(imgPath, user!.id);
-      Alert.alert("Successfully clocked in");
+      if (currentMode === "clockIn") {
+        await clockIn(imgPath, user!.id);
+        Alert.alert("Successfully clocked in");
+      } else {
+        await clockOut(imgPath, user!.id);
+        Alert.alert("Successfully clocked out");
+      }
     } catch (e: any) {
       Alert.alert("Something went wrong.", e);
       setIsSubmitting(false);
