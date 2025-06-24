@@ -11,6 +11,7 @@ import { useCurrentUser } from "../../hooks/useCurrentUser";
 import { ITimelog } from "../../types/ITimelog";
 import { getTimeLogs } from "../../services/timelogs.service";
 import { PAGE_SIZE } from "../../constants/PAGE_SIZE";
+import { formateDate } from "../../lib/formatDate";
 
 export default function TimesheetScreen() {
   const user = useCurrentUser();
@@ -37,8 +38,8 @@ export default function TimesheetScreen() {
   const renderItem = ({ item }: { item: ITimelog }) => (
     <View style={styles.card}>
       <Text style={styles.date}>{item.date}</Text>
-      <Text style={styles.time}>Clock In: {item.clock_in}</Text>
-      <Text style={styles.time}>Clock Out: {item.clock_out}</Text>
+      <Text style={styles.time}>Clock In: {formateDate(item.clock_in)}</Text>
+      <Text style={styles.time}>Clock Out: {formateDate(item.clock_out)}</Text>
     </View>
   );
 
@@ -56,6 +57,8 @@ export default function TimesheetScreen() {
         renderItem={renderItem}
         onEndReached={fetchTimeLogs}
         onEndReachedThreshold={0.5}
+        refreshing={loading}
+        onRefresh={fetchTimeLogs}
         ListFooterComponent={
           loading ? <ActivityIndicator size="large" color="#0000ff" /> : null
         }
