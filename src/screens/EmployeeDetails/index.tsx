@@ -5,6 +5,7 @@ import { useCurrentUser } from "../../hooks/useCurrentUser";
 import { fetchUserDetails } from "../../services/user.service";
 import { IUser } from "../../types/IUser";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { supabase } from "../../lib/supabase";
 
 const employee = {
   name: "John Doe",
@@ -19,6 +20,10 @@ export default function EmployeeDetailsScreen() {
   const user = useCurrentUser();
   const [employee, setEmployee] = useState<IUser>();
   const [loading, setLoading] = useState<boolean>(true);
+
+  const employeePicture = supabase.storage
+    .from("employees")
+    .getPublicUrl(employee?.picture || "").data.publicUrl;
 
   const fetchUserDetail = async () => {
     setLoading(true);
@@ -40,7 +45,7 @@ export default function EmployeeDetailsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        {/* <Image source={{ uri: employee.avatar }} style={styles.avatar} /> */}
+        <Image source={{ uri: employeePicture }} style={styles.avatar} />
         <Text style={styles.name}>{employee?.name}</Text>
         <Text style={styles.position}>{employee?.assignment}</Text>
 
@@ -53,6 +58,12 @@ export default function EmployeeDetailsScreen() {
 
           <Text style={styles.label}>Phone:</Text>
           <Text style={styles.value}>{employee?.contact}</Text>
+
+          <Text style={styles.label}>Address:</Text>
+          <Text style={styles.value}>{employee?.address}</Text>
+
+          <Text style={styles.label}>Birthday:</Text>
+          <Text style={styles.value}>{employee?.bday}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

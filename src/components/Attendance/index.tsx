@@ -51,7 +51,7 @@ export default function AttendanceButtons({
               [
                 { text: "Cancel", style: "cancel" },
                 {
-                  text: "Yes, clock out",
+                  text: "Yes",
                   onPress: () => {
                     setCurrentMode("clockOut");
                     setIsCameraOpen(true);

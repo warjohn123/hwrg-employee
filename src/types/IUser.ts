@@ -1,5 +1,5 @@
 export type IUser = {
-  id: number;
+  id: string;
   name: string;
   type: IUserType;
   assignment: IAssignment;
@@ -7,6 +7,10 @@ export type IUser = {
   bday: string;
   contact: string;
   email: string;
+  picture: string | null;
+  documents: string[];
+  rate_per_day: number;
+  first_duty_date: string;
 };
 
 export enum IUserType {
