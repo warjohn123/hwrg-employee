@@ -6,10 +6,12 @@ import {
   Pressable,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { styles } from "./LoginScreen.styles";
 import { loginUser } from "../../../services/auth.service";
+import Feather from "@expo/vector-icons/Feather";
 
 type Props = {
   onLoginSuccess: () => void;
@@ -19,6 +21,7 @@ export default function LoginScreen({ onLoginSuccess }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const onLogin = async () => {
     if (!email || !password) {
@@ -59,13 +62,22 @@ export default function LoginScreen({ onLoginSuccess }: Props) {
         />
 
         <Text style={styles.label}>Password</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="••••••••"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.passwordInput}
+            placeholder="••••••••"
+            secureTextEntry={!showPassword}
+            value={password}
+            onChangeText={setPassword}
+          />
+          <TouchableOpacity
+            style={styles.passwordIcon}
+            onPress={() => setShowPassword(!showPassword)}
+          >
+            {showPassword && <Feather name="eye-off" size={20} color="black" />}
+            {!showPassword && <Feather name="eye" size={20} color="black" />}
+          </TouchableOpacity>
+        </View>
 
         <Pressable style={styles.button} disabled={isLoading} onPress={onLogin}>
           <Text style={styles.buttonText}>
