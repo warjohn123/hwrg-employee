@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { User } from "@supabase/supabase-js";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Alert, Pressable, Text } from "react-native";
 import { hasClockedInToday } from "../../services/timelogs.service";
 import LoadingSpinner from "../LoadingSpinner";
@@ -31,11 +31,11 @@ export default function AttendanceButtons({
     setIsCheckingAttendance(false);
   };
 
-  useFocusEffect(
-    useCallback(() => {
+  useEffect(() => {
+    if (user) {
       checkClockIn();
-    }, [])
-  );
+    }
+  }, [user]);
 
   if (isCheckingAttendance) return <LoadingSpinner />;
 
