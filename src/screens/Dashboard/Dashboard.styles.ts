@@ -8,6 +8,10 @@ export const styles = StyleSheet.create({
   container: {
     padding: 20,
     paddingBottom: 40,
+    display: "flex",
+    justifyContent: "space-between",
+    height: "100%",
+    flexDirection: "column",
   },
   header: {
     fontSize: 24,

@@ -1,4 +1,4 @@
-import { CameraView, useCameraPermissions } from "expo-camera";
+import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import { Image } from "expo-image";
 import { useRef, useState } from "react";
 import { Alert, Button, Pressable, StyleSheet, Text, View } from "react-native";
@@ -7,6 +7,7 @@ import { uploadImage } from "../../lib/uploadImage";
 import { clockIn, clockOut } from "../../services/timelogs.service";
 import LoadingSpinner from "../LoadingSpinner";
 import { styles } from "./CameraContainer.styles";
+import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 
 type Props = {
   setIsCameraOpen: (val: boolean) => void;
@@ -21,7 +22,7 @@ export default function CameraContainer({
   const ref = useRef<CameraView>(null);
   const [uri, setUri] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  //   const [facing, setFacing] = useState<CameraType>("front");
+  const [facing, setFacing] = useState<CameraType>("front");
   const user = useCurrentUser();
 
   if (!permission) {
@@ -44,9 +45,9 @@ export default function CameraContainer({
     setUri(photo!.uri);
   };
 
-  //   const toggleFacing = () => {
-  //     setFacing((prev) => (prev === "back" ? "front" : "back"));
-  //   };
+  const toggleFacing = () => {
+    setFacing((prev) => (prev === "back" ? "front" : "back"));
+  };
 
   const submitPhoto = async () => {
     if (!uri) return;
@@ -105,7 +106,7 @@ export default function CameraContainer({
         style={StyleSheet.absoluteFill} // fills the screen
         ref={ref}
         mode="picture"
-        facing={"back"}
+        facing={facing}
         mute={false}
         responsiveOrientationWhenOrientationLocked
       >
@@ -132,9 +133,9 @@ export default function CameraContainer({
               </View>
             )}
           </Pressable>
-          {/* <Pressable onPress={toggleFacing}>
+          <Pressable onPress={toggleFacing}>
             <FontAwesome6 name="rotate-left" size={32} color="white" />
-          </Pressable> */}
+          </Pressable>
         </View>
       </CameraView>
     );
