@@ -1,7 +1,7 @@
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useIsFocused } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -11,6 +11,11 @@ import EmployeeDetailsScreen from "./src/screens/EmployeeDetails";
 import TimesheetScreen from "./src/screens/Timesheet";
 import { useAuthSession } from "./src/hooks/useAuthSession";
 import { supabase } from "./src/lib/supabase";
+
+function UnmountOnBlur({ children }: { children: React.ReactNode }) {
+  const focused = useIsFocused();
+  return focused ? <>{children}</> : null;
+}
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -49,6 +54,9 @@ export default function App() {
       {isAuthenticated && (
         <Drawer.Navigator
           initialRouteName="Dashboard"
+          screenLayout={({ children }) => (
+            <UnmountOnBlur>{children}</UnmountOnBlur>
+          )}
           screenOptions={({ navigation }) => ({
             headerLeft: () => (
               <TouchableOpacity

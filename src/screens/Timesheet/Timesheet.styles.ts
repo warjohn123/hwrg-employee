@@ -13,10 +13,6 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
   },
-  list: {
-    paddingBottom: 100,
-    marginTop: 30,
-  },
   card: {
     backgroundColor: "#fff",
     borderRadius: 10,
