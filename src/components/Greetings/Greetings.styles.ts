@@ -6,12 +6,15 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#aaa",
     borderRadius: 8,
-    display: "flex",
+  },
+  infoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
   },
   header: {
     fontSize: 16,
     fontWeight: "700",
-    marginBottom: 20,
     color: "#111827",
   },
 });
