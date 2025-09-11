@@ -58,7 +58,6 @@ export default function Avatar({
 
   const bgColor = useMemo(() => {
     const key = (name || initials || "anon").toString();
-    console.log("Avatar key:", key);
     const idx = hashStringToIndex(key, DEFAULT_COLORS.length);
     return DEFAULT_COLORS[idx];
   }, [name, initials]);

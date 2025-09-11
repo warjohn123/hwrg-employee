@@ -13,6 +13,11 @@ export const styles = StyleSheet.create({
     height: "100%",
     flexDirection: "column",
   },
+  dashboardGridContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 30,
+  },
   header: {
     fontSize: 24,
     fontWeight: "700",

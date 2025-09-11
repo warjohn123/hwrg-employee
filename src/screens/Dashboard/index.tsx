@@ -9,6 +9,7 @@ import Greetings from "../../components/Greetings";
 import { IUser } from "../../types/IUser";
 import { fetchUserDetails } from "../../services/user.service";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import DashboardGrid from "../../components/DashboardGrid";
 
 export default function EmployeeDashboardScreen() {
   const [isCameraOpen, setIsCameraOpen] = useState<boolean>(false);
@@ -47,7 +48,10 @@ export default function EmployeeDashboardScreen() {
       ) : (
         <SafeAreaView style={styles.safe}>
           <View style={styles.container}>
-            {employee && <Greetings user={employee} />}
+            <View style={styles.dashboardGridContainer}>
+              {employee && <Greetings user={employee} />}
+              <DashboardGrid />
+            </View>
 
             <AttendanceButtons
               setIsCameraOpen={setIsCameraOpen}
