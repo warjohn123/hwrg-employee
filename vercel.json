@@ -1,14 +1,16 @@
 {
-    "builds": [
+    "rewrites": [
         {
-            "src": "package.json",
-            "use": "@vercel/static-build"
-        }
-    ],
-    "routes": [
+            "source": "/_expo/(.*)",
+            "destination": "/_expo/$1"
+        },
         {
-            "src": "/(.*)",
-            "dest": "/index.html"
+            "source": "/assets/(.*)",
+            "destination": "/assets/$1"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
         }
     ]
 }
