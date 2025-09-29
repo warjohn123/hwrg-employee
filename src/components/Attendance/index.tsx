@@ -45,21 +45,23 @@ export default function AttendanceButtons({
         <Pressable
           style={styles.clockOutButton}
           onPress={() => {
-            Alert.alert(
-              "Are you sure?",
-              "This action cannot be undone.",
-              [
-                { text: "Cancel", style: "cancel" },
-                {
-                  text: "Yes",
-                  onPress: () => {
-                    setCurrentMode("clockOut");
-                    setIsCameraOpen(true);
-                  },
-                },
-              ],
-              { cancelable: true }
-            );
+            setCurrentMode("clockOut");
+            setIsCameraOpen(true);
+            // Alert.alert(
+            //   "Are you sure?",
+            //   "This action cannot be undone.",
+            //   [
+            //     { text: "Cancel", style: "cancel" },
+            //     {
+            //       text: "Yes",
+            //       onPress: () => {
+            //         setCurrentMode("clockOut");
+            //         setIsCameraOpen(true);
+            //       },
+            //     },
+            //   ],
+            //   { cancelable: true }
+            // );
           }}
         >
           <Text style={styles.clockInText}>Clock Out</Text>
