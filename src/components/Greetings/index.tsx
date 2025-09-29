@@ -19,7 +19,7 @@ export default function Greetings({ user }: Props) {
     <View style={styles.container}>
       <View style={styles.infoContainer}>
         <Avatar name={user.name} size={50} />
-        <Text style={styles.header}>Hey, {user?.name} 👋</Text>
+        <Text style={styles.header}>Hey {user?.name} 👋</Text>
       </View>
     </View>
   );
