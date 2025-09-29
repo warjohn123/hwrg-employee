@@ -49,7 +49,7 @@ export default function LoginScreen({ onLoginSuccess }: Props) {
       style={styles.container}
     >
       <View style={styles.form}>
-        <Text style={styles.title}>Login</Text>
+        <Text style={styles.title}>HWRG Timekeeping</Text>
 
         <Text style={styles.label}>Email</Text>
         <TextInput
