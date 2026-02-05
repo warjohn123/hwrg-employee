@@ -1,7 +1,15 @@
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import { Image } from "expo-image";
 import { useRef, useState } from "react";
-import { Alert, Button, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Button,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 import { uploadImage } from "../../lib/uploadImage";
 import { clockIn, clockOut } from "../../services/timelogs.service";
@@ -75,7 +83,7 @@ export default function CameraContainer({
     if (isSubmitting) return <LoadingSpinner />;
 
     return (
-      <View>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Image
           source={{ uri: uri as any }}
           contentFit="contain"
@@ -96,7 +104,7 @@ export default function CameraContainer({
             </Pressable>
           </>
         )}
-      </View>
+      </ScrollView>
     );
   };
 
