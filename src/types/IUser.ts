@@ -11,6 +11,7 @@ export type IUser = {
   documents: string[];
   rate_per_day: number;
   first_duty_date: string;
+  is_active: boolean;
 };
 
 export enum IUserType {
