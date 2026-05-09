@@ -7,7 +7,10 @@ export const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  contentContainer: {
     padding: 16,
+    paddingBottom: 100,
   },
   title: {
     fontSize: 24,

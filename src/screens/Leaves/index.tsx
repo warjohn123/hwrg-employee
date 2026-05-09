@@ -1,7 +1,20 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
-import { useMemo, useState } from "react";
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useMemo, useState } from "react";
+import {
+  FlatList,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import LeaveRequestCard from "../../components/LeaveRequestCard";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
+import {
+  fetchLeaveRequests,
+  type LeaveRequest,
+} from "../../services/leaves.service";
 import { styles } from "./Leaves.styles";
 
 type LeaveTab = "Pending" | "Approved" | "Rejected";
@@ -16,13 +29,40 @@ const TAB_DETAILS: Record<LeaveTab, string> = {
 
 export default function LeavesScreen() {
   const navigation = useNavigation<any>();
+  const currentUser = useCurrentUser();
   const [activeTab, setActiveTab] = useState<LeaveTab>("Pending");
+  const [leaves, setLeaves] = useState<LeaveRequest[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const tabMessage = useMemo(() => TAB_DETAILS[activeTab], [activeTab]);
 
+  useEffect(() => {
+    const loadLeaves = async () => {
+      if (!currentUser?.id) return;
+
+      setLoading(true);
+      try {
+        const data = await fetchLeaveRequests(currentUser.id, activeTab);
+        console.log("data", data);
+        setLeaves(data.leave_requests);
+      } catch (e) {
+        console.error(e);
+        setLeaves([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadLeaves();
+  }, [activeTab, currentUser?.id]);
+
   return (
     <SafeAreaView style={styles.safe}>
-      <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={true}
+      >
         <Text style={styles.title}>Leaves</Text>
 
         <View style={styles.tabsRow}>
@@ -46,10 +86,22 @@ export default function LeavesScreen() {
           })}
         </View>
 
-        <View style={styles.panel}>
-          <Text style={styles.panelTitle}>{activeTab}</Text>
-          <Text style={styles.panelDescription}>{tabMessage}</Text>
-        </View>
+        {leaves.length > 0 ? (
+          <FlatList
+            data={leaves}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <LeaveRequestCard leave={item} />}
+            scrollEnabled={false}
+            nestedScrollEnabled={true}
+          />
+        ) : (
+          <View style={styles.panel}>
+            <Text style={styles.panelTitle}>{activeTab}</Text>
+            <Text style={styles.panelDescription}>
+              {loading ? "Loading..." : tabMessage}
+            </Text>
+          </View>
+        )}
 
         <TouchableOpacity
           style={styles.fab}
@@ -58,7 +110,7 @@ export default function LeavesScreen() {
         >
           <MaterialIcons name="add" size={28} color="#fff" />
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
