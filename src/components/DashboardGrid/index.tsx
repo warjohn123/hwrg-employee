@@ -1,12 +1,14 @@
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./DashboardGrid.styles";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useNavigation } from "@react-navigation/native";
 
 type DashboardItem = {
   id: string;
   label: string;
   icon: keyof typeof MaterialIcons.glyphMap;
   section: string;
+  routeName?: string;
 };
 
 const DATA: DashboardItem[] = [
@@ -23,11 +25,14 @@ const DATA: DashboardItem[] = [
     label: "My Requests",
     icon: "check-circle",
     section: "HR & ATTENDANCE",
+    routeName: "Leave Requests",
   },
   //   { id: "5", label: "ReadyInsure", icon: "shield", section: "FINANCES" },
 ];
 
 export default function DashboardGrid() {
+  const navigation = useNavigation<any>();
+
   const groupedData = DATA.reduce((acc: any, item) => {
     if (!acc[item.section]) acc[item.section] = [];
     acc[item.section].push(item);
@@ -44,7 +49,14 @@ export default function DashboardGrid() {
             keyExtractor={(item) => item.id}
             numColumns={3}
             renderItem={({ item }) => (
-              <TouchableOpacity style={styles.card}>
+              <TouchableOpacity
+                style={styles.card}
+                onPress={() => {
+                  if (item.routeName) {
+                    navigation.navigate(item.routeName);
+                  }
+                }}
+              >
                 <MaterialIcons name={item.icon} size={28} color="#2ecc71" />
                 <Text style={styles.label}>{item.label}</Text>
               </TouchableOpacity>

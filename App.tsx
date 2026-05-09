@@ -8,6 +8,9 @@ import { Text, TouchableOpacity, View } from "react-native";
 import LoginScreen from "./src/screens/Auth/Login/LoginScreen";
 import EmployeeDashboardScreen from "./src/screens/Dashboard";
 import EmployeeDetailsScreen from "./src/screens/EmployeeDetails";
+import LeaveApplicationFormScreen from "./src/screens/LeaveApplicationForm/index";
+import LeavesScreen from "./src/screens/Leaves/index";
+import LeaveRequestsScreen from "./src/screens/LeaveRequests/index";
 import TimesheetScreen from "./src/screens/Timesheet";
 import { useAuthSession } from "./src/hooks/useAuthSession";
 import { supabase } from "./src/lib/supabase";
@@ -83,6 +86,21 @@ export default function App() {
           <Drawer.Screen
             name="Employee Details"
             component={EmployeeDetailsScreen}
+          />
+          <Drawer.Screen
+            name="Leave Requests"
+            component={LeaveRequestsScreen}
+            options={{ drawerLabel: "Requests" }}
+          />
+          <Drawer.Screen
+            name="Leaves"
+            component={LeavesScreen}
+            options={{ drawerItemStyle: { display: "none" } }}
+          />
+          <Drawer.Screen
+            name="Leave Application"
+            component={LeaveApplicationFormScreen}
+            options={{ drawerItemStyle: { display: "none" } }}
           />
         </Drawer.Navigator>
       )}
